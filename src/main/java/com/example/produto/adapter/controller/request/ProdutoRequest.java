@@ -1,4 +1,4 @@
-package com.example.produto.adapter.request;
+package com.example.produto.adapter.controller.request;
 
 import java.math.BigDecimal;
 

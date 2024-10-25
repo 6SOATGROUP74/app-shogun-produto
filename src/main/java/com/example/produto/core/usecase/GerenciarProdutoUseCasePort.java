@@ -1,6 +1,7 @@
 package com.example.produto.core.usecase;
 
-import com.example.demo.core.domain.Produto;
+
+import com.example.produto.core.domain.Produto;
 
 import java.util.List;
 

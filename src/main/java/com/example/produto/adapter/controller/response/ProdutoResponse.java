@@ -1,4 +1,4 @@
-package com.example.produto.adapter.response;
+package com.example.produto.adapter.controller.response;
 
 import java.math.BigDecimal;
 
