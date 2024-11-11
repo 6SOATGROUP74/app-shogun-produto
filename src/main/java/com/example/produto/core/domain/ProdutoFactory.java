@@ -2,8 +2,6 @@ package com.example.produto.core.domain;
 
 import com.example.produto.adapter.controller.request.ProdutoRequest;
 
-import java.math.BigDecimal;
-
 public class ProdutoFactory {
 
     public static Produto create(ProdutoRequest produtoRequest){
