@@ -3,6 +3,8 @@ package com.example.produto.adapter.controller;
 import com.example.produto.adapter.controller.request.ProdutoRequest;
 import com.example.produto.adapter.controller.request.mapper.ProdutoMapper;
 import com.example.produto.adapter.presenter.produto.ProdutoResponseMapper;
+import com.example.produto.core.domain.Produto;
+import com.example.produto.core.domain.ProdutoFactory;
 import com.example.produto.core.usecase.GerenciarProdutoUseCasePort;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -24,10 +26,10 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> incluir(@RequestBody @Valid ProdutoRequest request){
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ProdutoResponseMapper.INSTANCE.mapFrom(
-                        gerenciarProdutoUseCasePort.salvar(ProdutoMapper.INSTANCE.mapFrom(request))));
+    public ResponseEntity<?> create(@RequestBody @Valid ProdutoRequest request){
+        final Produto produtoResponse = gerenciarProdutoUseCasePort.salvar(ProdutoFactory.create(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ProdutoResponseMapper.INSTANCE.mapFrom(produtoResponse));
+
     }
 
     @PatchMapping("/{idProduto}")

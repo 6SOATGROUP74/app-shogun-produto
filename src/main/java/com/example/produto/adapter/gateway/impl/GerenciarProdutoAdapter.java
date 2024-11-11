@@ -23,6 +23,8 @@ public class GerenciarProdutoAdapter implements GerenciarProdutoAdapterPort {
 
     @Override
     public Produto salvar(Produto produto) {
+
+
         var produtoEntity = ProdutoEntityMapper.INSTANCE.mapFrom(produto);
         return ProdutoEntityMapper.INSTANCE.mapFrom(produtoRepository.save(produtoEntity));
     }

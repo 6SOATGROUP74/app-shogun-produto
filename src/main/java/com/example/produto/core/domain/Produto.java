@@ -6,20 +6,10 @@ import java.math.BigDecimal;
 public class Produto {
 
     private String nome;
-    private Long quantidade;
     private CategoriaEnum categoria;
     private BigDecimal valor;
     private Long idProduto;
     private boolean status;
-
-
-    public Long getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Long quantidade) {
-        this.quantidade = quantidade;
-    }
 
     public String getNome() {
         return nome;
