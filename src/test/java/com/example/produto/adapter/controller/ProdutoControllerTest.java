@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,7 +46,7 @@ class ProdutoControllerTest {
 
 
     @Test
-    void devePermitirRegistrarMensagem() throws Exception {
+    void devePermitirSalvarProduto() throws Exception {
 
         ProdutoRequest produtoRequest = ProdutoBuilder.factoryProdutoRequest();
 
@@ -60,6 +60,36 @@ class ProdutoControllerTest {
                 .andExpect(status().isCreated());
         verify(gerenciarProdutoUseCasePort, times(1))
                 .salvar(any(Produto.class));
+    }
+
+    @Test
+    void devePermitirAlterarProduto() throws Exception {
+
+        ProdutoRequest produtoRequest = ProdutoBuilder.factoryProdutoRequest();
+
+        when(gerenciarProdutoUseCasePort.alterarProduto(any(Produto.class), anyLong()))
+                .thenAnswer(i -> i.getArgument(0));
+
+        mockMvc.perform(patch("/v1/produtos/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(produtoRequest)))
+                .andDo(print())
+                .andExpect(status().isOk());
+        verify(gerenciarProdutoUseCasePort, times(1))
+                .alterarProduto(any(Produto.class), anyLong());
+    }
+
+    @Test
+    void devePermitirDeletarProduto() throws Exception {
+
+        ProdutoRequest produtoRequest = ProdutoBuilder.factoryProdutoRequest();
+
+        mockMvc.perform(delete("/v1/produtos/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+        verify(gerenciarProdutoUseCasePort, times(1))
+                .deletarProduto(anyLong());
     }
 
     public static String asJsonString(final Object obj) {
