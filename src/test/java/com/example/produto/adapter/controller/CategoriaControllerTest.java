@@ -14,13 +14,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ProdutoControllerTest {
+class CategoriaControllerTest {
 
     private MockMvc mockMvc;
 
@@ -28,14 +30,14 @@ class ProdutoControllerTest {
     GerenciarProdutoUseCasePort gerenciarProdutoUseCasePort;
 
     @InjectMocks
-    ProdutoController produtoController;
+    CategoriaController categoriaController;
 
     AutoCloseable openMocks;
 
     @BeforeEach
     void setUp() {
         openMocks = MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(produtoController)
+        mockMvc = MockMvcBuilders.standaloneSetup(categoriaController)
                 .setControllerAdvice(new CustomExceptionHandler())
                 .addFilter((request, response, chain) -> {
                     response.setCharacterEncoding("UTF-8");
@@ -50,47 +52,18 @@ class ProdutoControllerTest {
 
         ProdutoRequest produtoRequest = ProdutoCommon.factoryProdutoRequest();
 
-        when(gerenciarProdutoUseCasePort.salvar(any(Produto.class)))
-                .thenAnswer(i -> i.getArgument(0));
+        when(gerenciarProdutoUseCasePort.buscarProdutoPorCategoria(anyString()))
+                .thenReturn(List.of(ProdutoCommon.factory()));
 
-        mockMvc.perform(post("/v1/produtos")
+        mockMvc.perform(get("/v1/categoria/LANCHES/produto")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(produtoRequest)))
                     .andDo(print())
-                .andExpect(status().isCreated());
-        verify(gerenciarProdutoUseCasePort, times(1))
-                .salvar(any(Produto.class));
-    }
-
-    @Test
-    void devePermitirAlterarProduto() throws Exception {
-
-        ProdutoRequest produtoRequest = ProdutoCommon.factoryProdutoRequest();
-
-        when(gerenciarProdutoUseCasePort.alterarProduto(any(Produto.class), anyLong()))
-                .thenAnswer(i -> i.getArgument(0));
-
-        mockMvc.perform(patch("/v1/produtos/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(produtoRequest)))
-                .andDo(print())
                 .andExpect(status().isOk());
         verify(gerenciarProdutoUseCasePort, times(1))
-                .alterarProduto(any(Produto.class), anyLong());
+                .buscarProdutoPorCategoria(anyString());
     }
 
-    @Test
-    void devePermitirDeletarProduto() throws Exception {
-
-        ProdutoRequest produtoRequest = ProdutoCommon.factoryProdutoRequest();
-
-        mockMvc.perform(delete("/v1/produtos/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-        verify(gerenciarProdutoUseCasePort, times(1))
-                .deletarProduto(anyLong());
-    }
 
     public static String asJsonString(final Object obj) {
         try {

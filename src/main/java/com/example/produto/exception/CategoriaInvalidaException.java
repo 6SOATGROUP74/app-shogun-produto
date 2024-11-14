@@ -6,7 +6,4 @@ public class CategoriaInvalidaException extends RuntimeException {
         super(message);
     };
 
-    public CategoriaInvalidaException(final String message, final Throwable cause){
-        super(message, cause);
-    };
 }

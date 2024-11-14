@@ -7,7 +7,7 @@ import com.example.produto.core.domain.Produto;
 
 import java.math.BigDecimal;
 
-public abstract class ProdutoBuilder {
+public abstract class ProdutoCommon {
 
     public static Produto factory(){
         Produto produto = new Produto();

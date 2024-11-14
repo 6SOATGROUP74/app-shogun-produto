@@ -4,7 +4,6 @@ package com.example.produto.core.usecase.impl;
 import com.example.produto.adapter.gateway.interfaces.GerenciarProdutoAdapterPort;
 import com.example.produto.core.domain.CategoriaEnum;
 import com.example.produto.core.domain.Produto;
-import com.example.produto.core.domain.ProdutoFactory;
 import com.example.produto.core.usecase.GerenciarProdutoUseCasePort;
 import com.example.produto.exception.CategoriaInvalidaException;
 import com.example.produto.exception.ProdutoNotFoundException;

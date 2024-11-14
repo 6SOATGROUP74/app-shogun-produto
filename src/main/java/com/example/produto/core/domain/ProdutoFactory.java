@@ -2,7 +2,7 @@ package com.example.produto.core.domain;
 
 import com.example.produto.adapter.controller.request.ProdutoRequest;
 
-public class ProdutoFactory {
+public abstract class ProdutoFactory {
 
     public static Produto create(ProdutoRequest produtoRequest){
         Produto produto = new Produto();

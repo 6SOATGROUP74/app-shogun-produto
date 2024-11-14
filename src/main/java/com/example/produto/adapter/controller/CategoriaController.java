@@ -28,6 +28,7 @@ public class CategoriaController {
     @GetMapping("/{categoria}/produto")
     public ResponseEntity<List<ProdutoResponse>> buscar(@PathVariable("categoria") final String categoria){
         return ResponseEntity.ok().body(
-                ProdutoResponseMapper.INSTANCE.mapListFrom(gerenciarProdutoUseCasePort.buscarProdutoPorCategoria(categoria)));
+                ProdutoResponseMapper.INSTANCE.mapListFrom(
+                        gerenciarProdutoUseCasePort.buscarProdutoPorCategoria(categoria)));
     }
 }

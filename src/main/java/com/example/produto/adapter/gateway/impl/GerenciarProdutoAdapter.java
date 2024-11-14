@@ -3,9 +3,7 @@ package com.example.produto.adapter.gateway.impl;
 import com.example.produto.adapter.gateway.interfaces.GerenciarProdutoAdapterPort;
 import com.example.produto.adapter.infra.ProdutoRepository;
 import com.example.produto.adapter.infra.repository.presenter.ProdutoEntityMapper;
-import com.example.produto.core.domain.CategoriaEnum;
 import com.example.produto.core.domain.Produto;
-import com.example.produto.exception.CategoriaInvalidaException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -34,10 +32,6 @@ public class GerenciarProdutoAdapter implements GerenciarProdutoAdapterPort {
     @Override
     public List<Produto> buscarProdutoPorCategoria(String categoria) {
         logger.info("m=buscarProdutoPorCategoria, msg=Buscando produto por categoria, categoria={}", categoria);
-
-        if(!CategoriaEnum.contains(categoria)){
-            throw new CategoriaInvalidaException("Categoria invalida");
-        }
 
         return ProdutoEntityMapper.INSTANCE.mapFrom(produtoRepository.findByCategoriaAndStatus(categoria,true));
     }
