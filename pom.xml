@@ -11,7 +11,7 @@
 	<groupId>com.produto</groupId>
 	<artifactId>produto</artifactId>
 	<version>0.0.1</version>
-	<name>produto</name>
+	<name>shogun-lanches-produto</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>

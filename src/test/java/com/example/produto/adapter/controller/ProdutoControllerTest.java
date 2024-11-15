@@ -4,8 +4,10 @@ import com.example.produto.ProdutoCommon;
 import com.example.produto.adapter.controller.request.ProdutoRequest;
 import com.example.produto.core.domain.Produto;
 import com.example.produto.core.usecase.GerenciarProdutoUseCasePort;
+import com.example.produto.exception.ProdutoNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -44,40 +46,67 @@ class ProdutoControllerTest {
                 .build();
     }
 
+    @Nested
+    class SalvarProduto {
+        @Test
+        void devePermitirSalvarProduto() throws Exception {
 
-    @Test
-    void devePermitirSalvarProduto() throws Exception {
+            ProdutoRequest produtoRequest = ProdutoCommon.factoryProdutoRequest();
 
-        ProdutoRequest produtoRequest = ProdutoCommon.factoryProdutoRequest();
+            when(gerenciarProdutoUseCasePort.salvar(any(Produto.class)))
+                    .thenAnswer(i -> i.getArgument(0));
 
-        when(gerenciarProdutoUseCasePort.salvar(any(Produto.class)))
-                .thenAnswer(i -> i.getArgument(0));
-
-        mockMvc.perform(post("/v1/produtos")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(produtoRequest)))
+            mockMvc.perform(post("/v1/produtos")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(produtoRequest)))
                     .andDo(print())
-                .andExpect(status().isCreated());
-        verify(gerenciarProdutoUseCasePort, times(1))
-                .salvar(any(Produto.class));
+                    .andExpect(status().isCreated());
+            verify(gerenciarProdutoUseCasePort, times(1))
+                    .salvar(any(Produto.class));
+        }
+
     }
 
-    @Test
-    void devePermitirAlterarProduto() throws Exception {
+    @Nested
+    class AlterarProduto {
 
-        ProdutoRequest produtoRequest = ProdutoCommon.factoryProdutoRequest();
+        @Test
+        void devePermitirAlterarProduto() throws Exception {
 
-        when(gerenciarProdutoUseCasePort.alterarProduto(any(Produto.class), anyLong()))
-                .thenAnswer(i -> i.getArgument(0));
+            ProdutoRequest produtoRequest = ProdutoCommon.factoryProdutoRequest();
 
-        mockMvc.perform(patch("/v1/produtos/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(produtoRequest)))
-                .andDo(print())
-                .andExpect(status().isOk());
-        verify(gerenciarProdutoUseCasePort, times(1))
-                .alterarProduto(any(Produto.class), anyLong());
+            when(gerenciarProdutoUseCasePort.alterarProduto(any(Produto.class), anyLong()))
+                    .thenAnswer(i -> i.getArgument(0));
+
+            mockMvc.perform(patch("/v1/produtos/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(produtoRequest)))
+                    .andDo(print())
+                    .andExpect(status().isOk());
+            verify(gerenciarProdutoUseCasePort, times(1))
+                    .alterarProduto(any(Produto.class), anyLong());
+        }
+
+        @Test
+        void deveLancarExcecao_quandoAlterarProdutoInexistente() throws Exception {
+
+            ProdutoRequest produtoRequest = ProdutoCommon.factoryProdutoRequest();
+
+            when(gerenciarProdutoUseCasePort.alterarProduto(any(Produto.class), anyLong()))
+                    .thenThrow(ProdutoNotFoundException.class);
+
+            mockMvc.perform(patch("/v1/produtos/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(produtoRequest)))
+                    .andDo(print())
+                    .andExpect(status().isNotFound());
+            verify(gerenciarProdutoUseCasePort, times(1))
+                    .alterarProduto(any(Produto.class), anyLong());
+        }
     }
+
+
+
 
     @Test
     void devePermitirDeletarProduto() throws Exception {

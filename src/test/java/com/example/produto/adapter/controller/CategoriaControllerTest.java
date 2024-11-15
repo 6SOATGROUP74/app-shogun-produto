@@ -4,6 +4,7 @@ import com.example.produto.ProdutoCommon;
 import com.example.produto.adapter.controller.request.ProdutoRequest;
 import com.example.produto.core.domain.Produto;
 import com.example.produto.core.usecase.GerenciarProdutoUseCasePort;
+import com.example.produto.exception.CategoriaInvalidaException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ class CategoriaControllerTest {
 
 
     @Test
-    void devePermitirSalvarProduto() throws Exception {
+    void devePermitirBuscarProdutoPorCategoria() throws Exception {
 
         ProdutoRequest produtoRequest = ProdutoCommon.factoryProdutoRequest();
 
@@ -60,6 +61,24 @@ class CategoriaControllerTest {
                         .content(asJsonString(produtoRequest)))
                     .andDo(print())
                 .andExpect(status().isOk());
+        verify(gerenciarProdutoUseCasePort, times(1))
+                .buscarProdutoPorCategoria(anyString());
+    }
+
+    @Test
+    void deveLancarException_BuscarProdutoPorCategoriaInvalida() throws Exception {
+
+        ProdutoRequest produtoRequest = ProdutoCommon.factoryProdutoRequest();
+
+        when(gerenciarProdutoUseCasePort.buscarProdutoPorCategoria(anyString()))
+                .thenThrow(CategoriaInvalidaException.class);
+
+        mockMvc.perform(get("/v1/categoria/LANCHES/produto")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(produtoRequest)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
         verify(gerenciarProdutoUseCasePort, times(1))
                 .buscarProdutoPorCategoria(anyString());
     }
