@@ -9,6 +9,7 @@ import com.example.produto.exception.CategoriaInvalidaException;
 import com.example.produto.exception.ProdutoNotFoundException;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class GerenciarProdutoUseCase implements GerenciarProdutoUseCasePort {
@@ -30,7 +31,7 @@ public class GerenciarProdutoUseCase implements GerenciarProdutoUseCasePort {
         if(!CategoriaEnum.contains(categoria.toUpperCase())){
             throw new CategoriaInvalidaException("A categoria invalida");
         }
-        return gerenciarProdutoAdapterPort.buscarProdutoPorCategoria(categoria);
+        return gerenciarProdutoAdapterPort.buscarProdutoPorCategoria(categoria.toLowerCase(Locale.ROOT));
     }
 
     @Override
