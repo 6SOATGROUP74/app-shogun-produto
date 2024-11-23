@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase
 @Transactional
 @ActiveProfiles("test")
-class GerenciarProdutoAdapterIntegracaoTest {
+class GerenciarProdutoAdapterIT {
 
 
     @Autowired
