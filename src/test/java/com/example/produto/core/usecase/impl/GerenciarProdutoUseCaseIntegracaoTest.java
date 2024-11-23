@@ -83,7 +83,6 @@ class GerenciarProdutoUseCaseIntegracaoTest {
         @Test
         void deveLancarExcecao_QuandoDeletarProdutoInexistente(){
 
-
             assertThatThrownBy(() -> gerenciarProdutoUseCase.deletarProduto(1000L))
                     .isInstanceOf(ProdutoNotFoundException.class)
                     .hasMessage("Produto nao localizado na base.");
@@ -97,11 +96,6 @@ class GerenciarProdutoUseCaseIntegracaoTest {
 
         @Test
         void devePermitirAlterarProduto(){
-            when(gerenciarProdutoAdapterPort.buscarProdutoPorId(anyLong()))
-                    .thenReturn(ProdutoCommon.factory());
-
-            when(gerenciarProdutoAdapterPort.salvar(any(Produto.class)))
-                    .thenReturn(ProdutoCommon.factory());
 
             final var result = gerenciarProdutoUseCase.alterarProduto(ProdutoCommon.factory(), 1L);
 
@@ -109,32 +103,15 @@ class GerenciarProdutoUseCaseIntegracaoTest {
                 .isNotNull()
                 .isInstanceOf(Produto.class);
 
-
-            verify(gerenciarProdutoAdapterPort, times(1))
-                    .salvar(any(Produto.class));
-
-            verify(gerenciarProdutoAdapterPort, times(1))
-                    .buscarProdutoPorId(anyLong());
-
         }
-
-
 
         @Test
         void deveLancarExcecao_QuandoAlterarProduto(){
-            when(gerenciarProdutoAdapterPort.buscarProdutoPorId(anyLong()))
-                    .thenReturn(null);
 
             assertThatThrownBy(() ->
-                    gerenciarProdutoUseCase.alterarProduto(ProdutoCommon.factory(), 1L))
+                    gerenciarProdutoUseCase.alterarProduto(ProdutoCommon.factory(), 0L))
                     .isInstanceOf(ProdutoNotFoundException.class)
                             .hasMessage("Produto nao localizado na base.");
-
-            verify(gerenciarProdutoAdapterPort, times(1))
-                    .buscarProdutoPorId(anyLong());
-
-            verify(gerenciarProdutoAdapterPort, never())
-                    .salvar(any(Produto.class));
 
         }
     }
