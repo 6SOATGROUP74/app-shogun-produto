@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-produto-deployment
+  labels:
+    app: app-produto-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-produto-pod
+  template:
+    metadata:
+      labels:
+        app: app-produto-pod
+    spec:
+      serviceAccountName: rds-access-sa
+      containers:
+        - name: app-produto-container
+          image: 6soatgroup74/shogun-lanches-produto:prod
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: app-produto-configmap
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-produto-opaque
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-produto-opaque
+                  key: DB_PASSWORD
+          readinessProbe:
+            httpGet:
+              path: actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 60
+          startupProbe:
+            httpGet:
+              path: actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            failureThreshold: 30
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 200m
