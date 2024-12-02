@@ -57,26 +57,42 @@ jobs:
       - name: Build and Test
         run: mvn clean verify
 
+      - name: Valida diretorio
+        run: ls -la
+
+      - name: SonarCloud Scan
+        run: |
+          mvn sonar:sonar \
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.projectKey=6SOATGROUP74_shogun-lanches-produto \
+          -Dsonar.organization=shogun-lanches \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.qualitygate.wait=true \
+          -Dsonar.sources=src/main \
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+          -Dsonar.branch.name=${GITHUB_REF#refs/heads/} \
+          -Dsonar.branch.target=main 
+
   create-pr:
     needs: [build, test, sonarcloud]
     runs-on: ubuntu-latest
     if: success()
 
     steps:
-    - name: Checkout source code
-      uses: actions/checkout@v3
+      - name: Checkout source code
+        uses: actions/checkout@v3
 
-    - name: Configure Git
-      run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-    - name: Create Pull Request to develop
-      uses: peter-evans/create-pull-request@v7
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
-        base: main
-        title: 'PR : Aberto via actions'
-        body: 'Bora Brasil !!!.'
+      - name: Create Pull Request to develop
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          base: main
+          title: 'PR : Aberto via actions'
+          body: 'Bora Brasil !!!.'
 

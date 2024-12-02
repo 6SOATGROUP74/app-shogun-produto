@@ -47,4 +47,10 @@ public class ProdutoController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{idProduto}")
+    public ResponseEntity<?> obter(@PathVariable("idProduto") final Long idProduto){
+
+        return ResponseEntity.ok(gerenciarProdutoUseCasePort.buscarProdutoPorId(idProduto));
+    }
+
 }
