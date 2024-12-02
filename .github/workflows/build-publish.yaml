@@ -130,10 +130,10 @@ jobs:
 
       - name: Deploy to EKS
         run: |
-          kubectl apply -f ./app/app-nlb.yaml
-          kubectl apply -f ./app/app-svc.yaml
-          kubectl apply -f ./app/app-configmap.yaml
-          kubectl apply -f ./app/app-deployment.yaml
-          kubectl apply -f ./app/app-hpa.yaml
-          kubectl apply -f ./app/app-opaque.yaml
+          kubectl apply -f infra/app/app-nlb.yaml
+          kubectl apply -f infra/app/app-svc.yaml
+          kubectl apply -f infra/app/app-configmap.yaml
+          kubectl apply -f infra/app/app-deployment.yaml
+          kubectl apply -f infra/app/app-hpa.yaml
+          kubectl apply -f infra/app/app-opaque.yaml
 
