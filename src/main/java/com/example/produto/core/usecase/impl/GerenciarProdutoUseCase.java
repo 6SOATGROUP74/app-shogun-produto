@@ -35,6 +35,18 @@ public class GerenciarProdutoUseCase implements GerenciarProdutoUseCasePort {
     }
 
     @Override
+    public Produto buscarProdutoPorId(Long produtoId) {
+
+        final var response = gerenciarProdutoAdapterPort.buscarProdutoPorId(produtoId);
+
+        if(Objects.isNull(response)){
+            throw new ProdutoNotFoundException("Produto nao localizado na base.");
+        }
+
+        return response;
+    }
+
+    @Override
     public void deletarProduto(final Long idProduto) {
         var produto = gerenciarProdutoAdapterPort.buscarProdutoPorId(idProduto);
 
