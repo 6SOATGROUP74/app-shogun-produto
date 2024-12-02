@@ -83,6 +83,23 @@ class GerenciarProdutoUseCaseTest {
 
             verify(gerenciarProdutoAdapterPort, never()).buscarProdutoPorId(anyLong());
         }
+
+        @Test
+        void deveLancarExcecao_QuandoBuscarProdutoInexistente(){
+
+            when(gerenciarProdutoAdapterPort.buscarProdutoPorId(anyLong()))
+                    .thenReturn(null);
+
+            assertThatThrownBy(() -> gerenciarProdutoUseCase.buscarProdutoPorId(1L))
+                    .isInstanceOf(ProdutoNotFoundException.class)
+                    .hasMessage("Produto nao localizado na base.");
+
+            verify(gerenciarProdutoAdapterPort, times(1))
+                    .buscarProdutoPorId(anyLong());
+
+            verify(gerenciarProdutoAdapterPort, never()).salvar(any(Produto.class));
+
+        }
     }
 
     @Nested

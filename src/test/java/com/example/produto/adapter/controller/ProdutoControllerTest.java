@@ -47,6 +47,29 @@ class ProdutoControllerTest {
     }
 
     @Nested
+    class BuscarProduto {
+
+        @Test
+        void devePermitirBuscarProdutoPorId() throws Exception {
+
+            ProdutoRequest produtoRequest = ProdutoCommon.factoryProdutoRequest();
+
+            when(gerenciarProdutoUseCasePort.buscarProdutoPorId(anyLong()))
+                    .thenReturn(ProdutoCommon.factory());
+
+            mockMvc.perform(get("/v1/produtos/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(produtoRequest)))
+                    .andDo(print())
+                    .andExpect(status().isOk());
+            verify(gerenciarProdutoUseCasePort, times(1))
+                    .buscarProdutoPorId(anyLong());
+
+        }
+
+    }
+
+    @Nested
     class SalvarProduto {
         @Test
         void devePermitirSalvarProduto() throws Exception {
