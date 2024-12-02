@@ -57,6 +57,9 @@ jobs:
       - name: Build and Test
         run: mvn clean verify
 
+      - name: Valida diretorio
+        run: ls -la
+
       - name: SonarCloud Scan
         run: |
           mvn sonar:sonar \
