@@ -100,7 +100,24 @@ class GerenciarProdutoUseCaseTest {
             verify(gerenciarProdutoAdapterPort, never()).salvar(any(Produto.class));
 
         }
+
+        @Test
+        void devePermitirBuscarProdutoPorId(){
+
+            when(gerenciarProdutoAdapterPort.buscarProdutoPorId(anyLong()))
+                    .thenReturn(ProdutoCommon.factory());
+
+            gerenciarProdutoUseCase.buscarProdutoPorId(1L);
+
+            verify(gerenciarProdutoAdapterPort, times(1))
+                    .buscarProdutoPorId(anyLong());
+
+            verify(gerenciarProdutoAdapterPort, never()).salvar(any(Produto.class));
+
+        }
     }
+
+
 
     @Nested
     class DeletarProduto {
